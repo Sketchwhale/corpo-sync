@@ -87,6 +87,20 @@ body {
 	align-items: center;
 }
 
+.info:hover {
+	text-align: right;
+	justify-content: right;
+	height: 26px;
+	border-radius: 20px;
+	padding-right: 10px;
+	color: #9a9a9a;
+	font: inherit;
+	background: orange;
+	display: flex;
+	align-items: center;
+}
+
+
 input::placeholder{
 	color:#3c3c3c;
 }
@@ -140,6 +154,20 @@ input::placeholder{
     border-radius: 20px;
     background: #212121;
     color: #636363;
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.delete_button:hover {
+	display: block;
+    justify-content: center;
+    border: 2px solid #464646;
+    width: 30px;
+    border-radius: 20px;
+	margin-bottom: 0px;
+	background: #929292;
+	color: orange;
     display: inline-flex;
     align-items: center;
     font-weight: bold;

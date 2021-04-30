@@ -50,8 +50,6 @@ func returnAllCompanies(w http.ResponseWriter, r *http.Request) {
 func encodeAllCompanies (w http.ResponseWriter) {
 	overview := TotalOverview{AllCompanies: Companies, AllOwnerships: Ownerships}
 	json.NewEncoder(w).Encode(overview)
-	//json.NewEncoder(w).Encode(Companies)
-	//json.NewEncoder(w).Encode(Ownerships)
 }
 
 func getCompany(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +64,6 @@ func getCompany(w http.ResponseWriter, r *http.Request) {
 	for _, company := range Companies {
 
 		if company.Id == key {
-			//json.NewEncoder(w).Encode(company)
 			c = company
 
 			for _, ownership := range Ownerships {
@@ -101,7 +98,11 @@ func deleteCompany(w http.ResponseWriter, r *http.Request) {
 */
 
 func createCompany(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint hit: creating company")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
 	reqBody, _ := ioutil.ReadAll(r.Body)
+	fmt.Println(reqBody)
 	var company Company
 	json.Unmarshal(reqBody, &company)
 	Companies = append(Companies, company)
@@ -110,6 +111,11 @@ func createCompany(w http.ResponseWriter, r *http.Request) {
 
 func updateCompany(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept-Encoding, Accept, Content-Type")
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" { return }
 
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -126,8 +132,6 @@ func updateCompany(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(Companies[index])
 		}
 	}
-
-	encodeAllCompanies(w)
 }
 
 type NewOwnershipJson struct {
@@ -177,7 +181,7 @@ func handleRequests() {
 	router.HandleFunc("/all", returnAllCompanies)
 	router.HandleFunc("/company", createCompany).Methods("POST")
 	//router.HandleFunc("/company/{id}", deleteCompany).Methods("DELETE")
-	router.HandleFunc("/company/{id}", updateCompany).Methods("PUT")
+	router.HandleFunc("/company/{id}", updateCompany).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/company/{id}", getCompany)
 	router.HandleFunc("/addOwnership", addBeneficialOwner).Methods("POST")
 	log.Fatal(http.ListenAndServe(":10000", router))
